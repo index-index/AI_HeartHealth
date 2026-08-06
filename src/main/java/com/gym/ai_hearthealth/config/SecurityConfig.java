@@ -3,6 +3,7 @@ package com.gym.ai_hearthealth.config;
 
 import cn.hutool.core.text.AntPathMatcher;
 import com.gym.ai_hearthealth.util.JwtAuthticationFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -20,6 +21,7 @@ public class SecurityConfig {
     private static final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private static final String[] PUBLIC_PATHS = {
             "/",
+            "/error",
             "/api/test",
             "/api/user/login",
             "/api/user/add"
@@ -38,6 +40,14 @@ public class SecurityConfig {
     public JwtAuthticationFilter JwtAuthticationFilter(){
         return new JwtAuthticationFilter();
     }
+
+    @Bean
+    public FilterRegistrationBean<JwtAuthticationFilter> jwtFilterRegistration(JwtAuthticationFilter filter) {
+        FilterRegistrationBean<JwtAuthticationFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
